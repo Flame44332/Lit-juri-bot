@@ -13,6 +13,7 @@ ENV/
 # Local config/secrets
 .env
 .env.*
+!.env.example
 
 # Local databases/data
 *.sqlite3

@@ -29,30 +29,27 @@ python seed.py --force
 3. Скопируйте числовой `id` - это значение для `SUPERADMIN_TELEGRAM_ID` в `.env`.
 
 ### Как заполнить `.env`
-Создайте в корне проекта файл `.env`:
+Скопируйте шаблон из `.env.example`:
+```bash
+cp .env.example .env
+```
+
+На Windows (PowerShell):
+```powershell
+Copy-Item .env.example .env
+```
+
+Дальше откройте `.env` и заполните минимум:
 ```env
 BOT_TOKEN=1234567890:AA...
 SUPERADMIN_TELEGRAM_ID=123456789
-DB_PATH=juri_bot.sqlite3
-WEB_ENABLED=0
-WEB_HOST=0.0.0.0
-WEB_PORT=8080
-BOT_MODE=polling
 ```
 
-Что означает каждое поле:
-- `BOT_TOKEN` - токен из `@BotFather`
-- `SUPERADMIN_TELEGRAM_ID` - Telegram ID пользователя, который будет супер-админом
-- `DB_PATH` - путь к SQLite базе
-- `WEB_ENABLED` - запускать встроенный веб-сервер (`1`/`0`)
-- `WEB_HOST`, `WEB_PORT` - адрес и порт веб-сервера
-- `BOT_MODE` - режим Telegram-бота (`polling` или `webhook`)
-
-Если нужен только веб-режим без Telegram, добавьте:
+Если нужен только веб-режим без Telegram:
 ```env
 BOT_DISABLED=1
 ```
-Тогда `BOT_TOKEN` и `SUPERADMIN_TELEGRAM_ID` не обязательны.
+Тогда `BOT_TOKEN` и `SUPERADMIN_TELEGRAM_ID` не обязательны. Полный список переменных - в `.env.example` и в разделе `6) Переменные окружения`.
 
 ### Windows (PowerShell)
 1. Распакуйте архив и откройте PowerShell в папке проекта.
@@ -209,6 +206,7 @@ BOT_MODE=polling
 - `WEB_HOST`, `WEB_PORT` - адрес и порт веб-сервера
 - `WEB_DIR` - директория веб-статик-файлов
 - `WEB_RESULTS_PATH` - путь до `results.json`
+- `WEB_JURY_CODES` - список кодов жюри для web-only входа (через запятую, опционально)
 - `BOT_MODE` - `polling` или `webhook`
 - `WEBHOOK_URL`, `WEBHOOK_PATH`, `WEBHOOK_LISTEN`, `WEBHOOK_PORT`, `WEBHOOK_CERT`, `WEBHOOK_KEY`, `WEBHOOK_SECRET` - настройки webhook
 

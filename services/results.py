@@ -52,6 +52,45 @@ def _get_performance_criterion_ids() -> list[int]:
     return ids
 
 
+def _collect_scores_by_class_and_jury(
+    vocal_ids: list[int], video_ids: list[int], performance_ids: list[int]
+) -> dict[str, dict[int, dict[str, int]]]:
+    criterion_group: dict[int, str] = {}
+    for cid in vocal_ids:
+        criterion_group.setdefault(int(cid), "vocal")
+    for cid in video_ids:
+        criterion_group.setdefault(int(cid), "video")
+    for cid in performance_ids:
+        criterion_group.setdefault(int(cid), "performance")
+
+    if not criterion_group:
+        return {}
+
+    criterion_ids = sorted(criterion_group.keys())
+    placeholders = ",".join("?" for _ in criterion_ids)
+    with db.get_conn() as conn:
+        rows = conn.execute(
+            f"SELECT class_id, telegram_id, criterion_id, score FROM votes WHERE criterion_id IN ({placeholders})",
+            criterion_ids,
+        ).fetchall()
+
+    result: dict[str, dict[int, dict[str, int]]] = {}
+    for row in rows:
+        class_id = str(row["class_id"])
+        jury_id = int(row["telegram_id"])
+        criterion_id = int(row["criterion_id"])
+        score = int(row["score"] or 0)
+        group = criterion_group.get(criterion_id)
+        if not group:
+            continue
+        jury_scores = result.setdefault(class_id, {}).setdefault(
+            jury_id, {"vocal": 0, "video": 0, "performance": 0}
+        )
+        jury_scores[group] += score
+
+    return result
+
+
 def _sort_rows(rows: list[ResultRow]) -> list[ResultRow]:
     return sorted(
         rows,
@@ -87,19 +126,26 @@ def _build_awards(rows: list[ResultRow]) -> dict:
 def get_results() -> list[ResultRow]:
     classes = db.list_classes_ordered()
     vocal_ids = _get_vocal_criterion_ids()
-    vocal_totals = db.total_scores_by_class_for_criteria(vocal_ids) if vocal_ids else {}
     video_ids = _get_video_criterion_ids()
-    video_totals = db.total_scores_by_class_for_criteria(video_ids) if video_ids else {}
     performance_ids = _get_performance_criterion_ids()
-    performance_totals = db.total_scores_by_class_for_criteria(performance_ids) if performance_ids else {}
+    scores_by_class = _collect_scores_by_class_and_jury(vocal_ids, video_ids, performance_ids)
 
     rows: list[ResultRow] = []
     for cls in classes:
         class_id = cls["class_id"]
-        vocal_total = int(vocal_totals.get(class_id, 0) or 0)
-        video_total = int(video_totals.get(class_id, 0) or 0)
-        performance_total = int(performance_totals.get(class_id, 0) or 0)
-        final_total = (vocal_total + video_total) * performance_total
+        class_scores = scores_by_class.get(class_id, {})
+        vocal_total = 0
+        video_total = 0
+        performance_total = 0
+        final_total = 0
+        for jury_scores in class_scores.values():
+            vocal_jury = int(jury_scores.get("vocal", 0) or 0)
+            video_jury = int(jury_scores.get("video", 0) or 0)
+            performance_jury = int(jury_scores.get("performance", 0) or 0)
+            vocal_total += vocal_jury
+            video_total += video_jury
+            performance_total += performance_jury
+            final_total += (vocal_jury + video_jury) * performance_jury
         rows.append(
             ResultRow(
                 class_id=class_id,
