@@ -1,5 +1,7 @@
 from telebot import types
 
+import db
+
 SHORT_CRITERIA_LABELS = {
     "Вокал: Живое исполнение (или записана своя фонограмма)": "Вокал: живое/своя фонограмма",
     "Вокал: Техника": "Вокал: техника",
@@ -56,11 +58,13 @@ def back_button(callback: str) -> types.InlineKeyboardButton:
 
 def parallel_keyboard(prefix: str, back: str) -> types.InlineKeyboardMarkup:
     kb = types.InlineKeyboardMarkup(row_width=3)
-    kb.add(
-        types.InlineKeyboardButton("9 параллель", callback_data=f"{prefix}:par:9"),
-        types.InlineKeyboardButton("10 параллель", callback_data=f"{prefix}:par:10"),
-        types.InlineKeyboardButton("11 параллель", callback_data=f"{prefix}:par:11"),
-    )
+    parallels = db.list_parallels()
+    if parallels:
+        buttons = [
+            types.InlineKeyboardButton(f"{parallel} параллель", callback_data=f"{prefix}:par:{parallel}")
+            for parallel in parallels
+        ]
+        kb.add(*buttons)
     kb.add(back_button(back))
     return kb
 
@@ -252,9 +256,10 @@ def admin_class_list_for_set_order(classes, action: str, back: str) -> types.Inl
 
 def order_select_keyboard(action_prefix: str, class_id: str, back: str) -> types.InlineKeyboardMarkup:
     kb = types.InlineKeyboardMarkup(row_width=6)
+    max_order = max(db.count_classes(), 1)
     buttons = [
         types.InlineKeyboardButton(str(i), callback_data=f"{action_prefix}:{class_id}:{i}")
-        for i in range(1, 19)
+        for i in range(1, max_order + 1)
     ]
     kb.add(*buttons)
     kb.add(back_button(back))

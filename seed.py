@@ -23,13 +23,16 @@ SEED_ENTRIES = [
     ("11.3", "Hot Wings (I Wanna Party)"),
 ]
 
+SEED_BY_CLASS = {class_id: song for class_id, song in SEED_ENTRIES}
+SEED_SONGS = [song for _, song in SEED_ENTRIES]
+
 
 def seed(force: bool = False) -> None:
     db.init_db()
-    for idx, (class_id, song) in enumerate(SEED_ENTRIES, start=1):
-        cls = db.get_class(class_id)
-        if not cls:
-            continue
+    classes = db.list_classes_ordered()
+    for idx, cls in enumerate(classes, start=1):
+        class_id = cls["class_id"]
+        song = SEED_BY_CLASS.get(class_id, SEED_SONGS[(idx - 1) % len(SEED_SONGS)])
         if not force and cls["song_title"]:
             db.update_class_order(class_id, idx)
             continue

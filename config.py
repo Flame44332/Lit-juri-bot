@@ -28,11 +28,30 @@ def _get_env(name: str, required: bool = True, default: str | None = None) -> st
     return value
 
 
+def _parse_parallel_range(raw: str) -> tuple[int, int]:
+    value = (raw or "").strip()
+    parts = value.split("-", 1)
+    if len(parts) != 2:
+        raise RuntimeError("CLASS_PARALLELS must be in format '<start>-<end>', for example '9-11' or '5-8'")
+    try:
+        start = int(parts[0].strip())
+        end = int(parts[1].strip())
+    except ValueError as exc:
+        raise RuntimeError("CLASS_PARALLELS must contain integers, for example '9-11'") from exc
+    if start > end:
+        raise RuntimeError("CLASS_PARALLELS start must be <= end")
+    if start < 1 or end > 11:
+        raise RuntimeError("CLASS_PARALLELS must be within school range 1-11")
+    return start, end
+
+
 BOT_DISABLED = os.getenv("BOT_DISABLED", "0").lower() in ("1", "true", "yes")
 BOT_TOKEN = _get_env("BOT_TOKEN", required=not BOT_DISABLED)
 SUPERADMIN_TELEGRAM_ID = int(_get_env("SUPERADMIN_TELEGRAM_ID", required=not BOT_DISABLED, default="0") or 0)
 
 DB_PATH = os.getenv("DB_PATH", "juri_bot.sqlite3")
+CLASS_PARALLELS = os.getenv("CLASS_PARALLELS", "9-11").strip()
+CLASS_PARALLEL_START, CLASS_PARALLEL_END = _parse_parallel_range(CLASS_PARALLELS)
 
 SESSION_TTL_SECONDS = int(os.getenv("SESSION_TTL_SECONDS", "1800"))
 

@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from datetime import datetime
 from typing import Any, Iterable
 
-from config import DB_PATH
+from config import CLASS_PARALLEL_END, CLASS_PARALLEL_START, DB_PATH
 
 
 DEFAULT_CRITERIA = [
@@ -212,16 +212,19 @@ def ensure_defaults() -> None:
 def ensure_default_classes() -> None:
     classes = []
     order = 1
-    for parallel in (9, 10, 11):
+    for parallel in range(CLASS_PARALLEL_START, CLASS_PARALLEL_END + 1):
         for number in range(1, 7):
             class_id = f"{parallel}.{number}"
             classes.append((class_id, parallel, number, "", order))
             order += 1
 
     with get_conn() as conn:
+        existing_cnt = int(conn.execute("SELECT COUNT(1) AS cnt FROM classes").fetchone()["cnt"])
+        if existing_cnt > 0:
+            return
         conn.executemany(
             """
-            INSERT OR IGNORE INTO classes(class_id, parallel, number, song_title, performance_order)
+            INSERT INTO classes(class_id, parallel, number, song_title, performance_order)
             VALUES(?, ?, ?, ?, ?)
             """,
             classes,
@@ -520,6 +523,14 @@ def list_classes_by_parallel(parallel: int) -> list[sqlite3.Row]:
         ).fetchall()
 
 
+def list_parallels() -> list[int]:
+    with get_conn() as conn:
+        rows = conn.execute(
+            "SELECT DISTINCT parallel FROM classes ORDER BY parallel",
+        ).fetchall()
+        return [int(r["parallel"]) for r in rows]
+
+
 def list_classes_ordered() -> list[sqlite3.Row]:
     with get_conn() as conn:
         return conn.execute(
@@ -530,6 +541,12 @@ def list_classes_ordered() -> list[sqlite3.Row]:
 def get_class(class_id: str):
     with get_conn() as conn:
         return conn.execute("SELECT * FROM classes WHERE class_id=?", (class_id,)).fetchone()
+
+
+def count_classes() -> int:
+    with get_conn() as conn:
+        row = conn.execute("SELECT COUNT(1) AS cnt FROM classes").fetchone()
+        return int(row["cnt"])
 
 
 def update_class_song(class_id: str, song_title: str) -> None:

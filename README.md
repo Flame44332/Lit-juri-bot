@@ -43,6 +43,7 @@ Copy-Item .env.example .env
 ```env
 BOT_TOKEN=1234567890:AA...
 SUPERADMIN_TELEGRAM_ID=123456789
+CLASS_PARALLELS=9-11
 ```
 
 Если нужен только веб-режим без Telegram:
@@ -200,6 +201,7 @@ BOT_MODE=polling
 - `SUPERADMIN_TELEGRAM_ID` - Telegram ID супер-админа (обязательно, если `BOT_DISABLED=0`)
 - `BOT_DISABLED` - `1` для запуска без Telegram-бота
 - `DB_PATH` - путь к SQLite БД (по умолчанию `juri_bot.sqlite3`)
+- `CLASS_PARALLELS` - диапазон параллелей для автосоздания классов на пустой БД (например `9-11` или `5-8`)
 - `SESSION_TTL_SECONDS` - TTL сессий ввода в секундах (по умолчанию `1800`)
 - `LOG_CHANNEL_ID` - канал/чат для аудита (опционально)
 - `WEB_ENABLED` - включение веб-сервера (`1`/`0`)
@@ -212,7 +214,8 @@ BOT_MODE=polling
 
 ## 7) Что создается автоматически
 - SQLite БД и таблицы при первом запуске
-- 18 классов (`9.1`-`11.6`)
+- классы по `CLASS_PARALLELS`:
+  `9-11` -> `9.1`-`11.6`, `5-8` -> `5.1`-`8.6`
 - базовый набор критериев (11 штук с диапазонами баллов)
 
 ## 8) Полезные файлы

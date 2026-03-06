@@ -23,24 +23,17 @@ SEED_SONGS = [
     "Shape of You",
 ]
 
-CLASS_ORDER = [
-    "9.1", "9.2", "9.3", "9.4", "9.5", "9.6",
-    "10.1", "10.2", "10.3", "10.4", "10.5", "10.6",
-    "11.1", "11.2", "11.3", "11.4", "11.5", "11.6",
-]
-
-
 def seed(force: bool = False) -> None:
     db.init_db()
-    for idx, class_id in enumerate(CLASS_ORDER):
-        cls = db.get_class(class_id)
-        if not cls:
-            continue
-        song = SEED_SONGS[idx % len(SEED_SONGS)]
+    classes = db.list_classes_ordered()
+    for idx, cls in enumerate(classes, start=1):
+        class_id = cls["class_id"]
+        song = SEED_SONGS[(idx - 1) % len(SEED_SONGS)]
         if not force and cls["song_title"]:
+            db.update_class_order(class_id, idx)
             continue
         db.update_class_song(class_id, song)
-        db.update_class_order(class_id, idx + 1)
+        db.update_class_order(class_id, idx)
 
 
 if __name__ == "__main__":
