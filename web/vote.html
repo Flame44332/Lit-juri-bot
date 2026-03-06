@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ЛИТ 1533 — Веб-оценивание</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="vote.css" />
+</head>
+<body>
+  <div class="bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid"></div>
+  </div>
+
+  <main class="layout">
+    <header class="hero">
+      <div class="hero__tag">WEB-режим</div>
+      <h1 class="hero__title">Оценивание жюри</h1>
+      <div class="hero__subtitle">Локальная оценка без Telegram</div>
+    </header>
+
+    <section class="card login" id="loginCard">
+      <div class="card__head">
+        <div class="card__title">Вход жюри</div>
+        <div class="card__hint">Введите код, чтобы открыть форму оценивания.</div>
+      </div>
+      <div class="fields">
+        <label class="field">
+          <span>Код жюри</span>
+          <input id="juryCode" type="text" autocomplete="off" placeholder="например, JURY01" />
+        </label>
+        <label class="field">
+          <span>Имя (по желанию)</span>
+          <input id="juryName" type="text" autocomplete="off" placeholder="например, Елена" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="loginBtn" class="btn btn--primary">Войти</button>
+        <div id="loginError" class="hint"></div>
+      </div>
+    </section>
+
+    <section class="board" id="board" hidden>
+      <div class="board__bar">
+        <div id="juryLabel" class="jury-label"></div>
+        <div class="board__actions">
+          <button id="refreshBtn" class="btn btn--ghost">Обновить</button>
+          <button id="logoutBtn" class="btn btn--ghost">Сменить код</button>
+        </div>
+      </div>
+
+      <div class="board__grid">
+        <section class="panel">
+          <div class="panel__head">
+            <div class="panel__title">Классы</div>
+            <div id="activeHint" class="panel__hint"></div>
+          </div>
+          <div id="classList" class="class-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel__head">
+            <div id="classTitle" class="panel__title">Выберите класс</div>
+            <div id="classStatus" class="panel__hint"></div>
+          </div>
+          <div id="criteriaList" class="criteria"></div>
+          <div id="classMeta" class="panel__meta"></div>
+        </section>
+      </div>
+
+      <div class="board__grid board__grid--bottom">
+        <section class="panel">
+          <div class="panel__head">
+            <div class="panel__title">Мои итоги</div>
+            <div id="myProgress" class="panel__hint"></div>
+          </div>
+          <div id="mySummary" class="summary"></div>
+        </section>
+
+        <section class="panel panel--links">
+          <div class="panel__title">Промежуточные результаты</div>
+          <a class="link" href="index.html" target="_blank" rel="noopener">Открыть витрину результатов</a>
+          <div class="panel__meta">Обновляется после каждого сохранения.</div>
+        </section>
+      </div>
+
+      <div id="statusBar" class="status"></div>
+    </section>
+  </main>
+
+  <div id="notify" class="notify" hidden>
+    <div class="notify__card">
+      <div id="notifyText" class="notify__text"></div>
+      <div class="notify__actions">
+        <button id="notifyGo" class="btn btn--primary btn--small">Перейти к голосованию</button>
+        <button id="notifyClose" class="btn btn--ghost btn--small">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="vote.js"></script>
+</body>
+</html>

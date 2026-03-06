@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ЛИТ 1533 — Админ-панель</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid"></div>
+  </div>
+
+  <main class="layout">
+    <header class="hero">
+      <div class="hero__tag">WEB-режим</div>
+      <h1 class="hero__title">Админ-панель</h1>
+      <div class="hero__subtitle">Управление голосованием и настройками</div>
+    </header>
+
+    <section class="card login" id="loginCard">
+      <div class="card__head">
+        <div class="card__title">Вход администратора</div>
+        <div class="card__hint">Используйте логин/пароль из админки бота.</div>
+      </div>
+      <div class="fields">
+        <label class="field">
+          <span>Логин</span>
+          <input id="adminLogin" type="text" autocomplete="off" placeholder="admin" />
+        </label>
+        <label class="field">
+          <span>Пароль</span>
+          <input id="adminPassword" type="password" autocomplete="off" placeholder="password" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="loginBtn" class="btn btn--primary">Войти</button>
+        <div id="loginError" class="hint"></div>
+      </div>
+    </section>
+
+    <section class="admin" id="adminApp" hidden>
+      <div class="admin__bar">
+        <div class="admin__label" id="adminLabel"></div>
+        <div class="admin__actions">
+          <button id="refreshBtn" class="btn btn--ghost">Обновить</button>
+          <button id="logoutBtn" class="btn btn--ghost">Выйти</button>
+        </div>
+      </div>
+
+      <div class="admin__grid">
+        <nav class="admin__nav" id="nav">
+          <button class="nav__btn" data-section="classes">Классы</button>
+          <button class="nav__btn" data-section="queue">Очередь</button>
+          <button class="nav__btn" data-section="criteria">Критерии</button>
+          <button class="nav__btn" data-section="users">Пользователи</button>
+          <button class="nav__btn" data-section="invites">Коды</button>
+          <button class="nav__btn" data-section="voting">Голосование</button>
+          <button class="nav__btn" data-section="results">Результаты</button>
+          <button class="nav__btn" data-section="settings">Настройки</button>
+        </nav>
+
+        <div class="admin__content">
+          <section class="panel" data-section="classes">
+            <div class="panel__head">
+              <div class="panel__title">Классы</div>
+              <div class="panel__hint">Редактирование песни и номера выступления.</div>
+            </div>
+            <div id="classesList" class="list"></div>
+          </section>
+
+          <section class="panel" data-section="queue" hidden>
+            <div class="panel__head">
+              <div class="panel__title">Очередь выступлений</div>
+              <div class="panel__hint">Поменять местами или задать номер.</div>
+            </div>
+            <div class="queue__controls">
+              <div class="queue__block">
+                <div class="block__title">Поменять местами</div>
+                <div class="fields fields--inline">
+                  <select id="swapA"></select>
+                  <select id="swapB"></select>
+                  <button id="swapBtn" class="btn btn--primary btn--small">Поменять</button>
+                </div>
+              </div>
+              <div class="queue__block">
+                <div class="block__title">Задать номер</div>
+                <div class="fields fields--inline">
+                  <select id="orderClass"></select>
+                  <input id="orderValue" type="number" min="1" placeholder="№" />
+                  <button id="orderBtn" class="btn btn--primary btn--small">Сохранить</button>
+                </div>
+              </div>
+            </div>
+            <div id="queueList" class="list"></div>
+          </section>
+
+          <section class="panel" data-section="criteria" hidden>
+            <div class="panel__head">
+              <div class="panel__title">Критерии</div>
+              <div class="panel__hint">Добавление, переименование, удаление.</div>
+            </div>
+            <div class="criteria__controls">
+              <div class="criteria__block">
+                <div class="block__title">Добавить критерий</div>
+                <div class="fields fields--inline">
+                  <input id="critName" type="text" placeholder="Название" />
+                  <input id="critMin" type="number" min="0" placeholder="Мин" />
+                  <input id="critMax" type="number" min="1" placeholder="Макс" />
+                  <input id="critGroup" type="text" placeholder="Группа" />
+                  <button id="critAddBtn" class="btn btn--primary btn--small">Добавить</button>
+                </div>
+              </div>
+              <div class="criteria__block">
+                <div class="block__title">Переименовать</div>
+                <div class="fields fields--inline">
+                  <select id="critRenameId"></select>
+                  <input id="critRenameName" type="text" placeholder="Новое название" />
+                  <button id="critRenameBtn" class="btn btn--primary btn--small">Сохранить</button>
+                </div>
+              </div>
+              <div class="criteria__block">
+                <div class="block__title">Удалить</div>
+                <div class="fields fields--inline">
+                  <select id="critDeleteId"></select>
+                  <button id="critDeleteBtn" class="btn btn--ghost btn--small">Удалить</button>
+                </div>
+              </div>
+            </div>
+            <div id="criteriaList" class="list"></div>
+          </section>
+
+          <section class="panel" data-section="users" hidden>
+            <div class="panel__head">
+              <div class="panel__title">Пользователи</div>
+              <div class="panel__hint">Админы и жюри.</div>
+            </div>
+            <div class="users__grid">
+              <div class="users__block">
+                <div class="block__title">Админы</div>
+                <div class="fields fields--inline">
+                  <input id="adminCreateName" type="text" placeholder="Новый логин" />
+                  <button id="adminCreateBtn" class="btn btn--primary btn--small">Создать</button>
+                </div>
+                <div id="adminsList" class="list"></div>
+              </div>
+              <div class="users__block">
+                <div class="block__title">Жюри</div>
+                <div id="juryList" class="list"></div>
+              </div>
+              <div class="users__block">
+                <div class="block__title">Жюри (имя + код)</div>
+                <div class="fields fields--inline">
+                  <input id="juryProfileName" type="text" placeholder="Имя жюри для логов" />
+                  <button id="juryProfileCreateBtn" class="btn btn--primary btn--small">Создать</button>
+                </div>
+                <div id="juryProfilesList" class="list"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" data-section="invites" hidden>
+            <div class="panel__head">
+              <div class="panel__title">Коды приглашений</div>
+              <div class="panel__hint">Уникальный код на человека.</div>
+            </div>
+            <div class="fields fields--inline">
+              <button id="inviteCreateBtn" class="btn btn--primary btn--small">Создать новый код</button>
+              <div id="inviteInfo" class="panel__hint"></div>
+            </div>
+            <div id="invitesList" class="list"></div>
+          </section>
+
+          <section class="panel" data-section="voting" hidden>
+            <div class="panel__head">
+              <div class="panel__title">Голосование</div>
+              <div class="panel__hint" id="activeClassHint"></div>
+            </div>
+            <div class="voting__grid">
+              <div class="voting__block">
+                <div class="block__title">Открыть класс</div>
+                <div class="fields fields--inline">
+                  <select id="openClass"></select>
+                  <button id="openBtn" class="btn btn--primary btn--small">Открыть</button>
+                </div>
+              </div>
+              <div class="voting__block">
+                <div class="block__title">Закрыть класс</div>
+                <div class="fields fields--inline">
+                  <select id="closeClass"></select>
+                  <button id="closeBtn" class="btn btn--ghost btn--small">Закрыть</button>
+                </div>
+              </div>
+              <div class="voting__block">
+                <div class="block__title">Следующий по очереди</div>
+                <button id="nextBtn" class="btn btn--primary btn--small">Открыть следующий</button>
+              </div>
+            </div>
+            <div id="votingStatus" class="list"></div>
+          </section>
+
+          <section class="panel" data-section="results" hidden>
+            <div class="panel__head">
+              <div class="panel__title">Результаты</div>
+              <div class="panel__hint" id="resultsMeta"></div>
+            </div>
+            <div class="fields fields--inline">
+              <button id="resultsRefresh" class="btn btn--ghost btn--small">Обновить</button>
+              <button id="resultsFinal" class="btn btn--primary btn--small">Финальные итоги</button>
+            </div>
+            <div id="resultsList" class="list"></div>
+          </section>
+
+          <section class="panel" data-section="settings" hidden>
+            <div class="panel__head">
+              <div class="panel__title">Настройки и сервис</div>
+              <div class="panel__hint">Экспорт, сброс, логи.</div>
+            </div>
+            <div class="settings__grid">
+              <div class="settings__block">
+                <div class="block__title">Экспорт CSV</div>
+                <div class="fields fields--inline">
+                  <button class="btn btn--ghost btn--small" data-export="classes">Классы</button>
+                  <button class="btn btn--ghost btn--small" data-export="criteria">Критерии</button>
+                  <button class="btn btn--ghost btn--small" data-export="votes">Голоса</button>
+                  <button class="btn btn--ghost btn--small" data-export="results">Результаты</button>
+                  <button class="btn btn--ghost btn--small" data-export="criteria_totals">Детализация</button>
+                </div>
+              </div>
+              <div class="settings__block">
+                <div class="block__title">Сброс голосов</div>
+                <button id="resetBtn" class="btn btn--danger btn--small">Сбросить</button>
+                <div id="resetHint" class="panel__hint"></div>
+              </div>
+            </div>
+            <div class="block__title">Логи</div>
+            <div id="logsList" class="list"></div>
+          </section>
+        </div>
+      </div>
+
+      <div id="statusBar" class="status"></div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

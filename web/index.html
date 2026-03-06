@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ЛИТ 1533 — Итоги голосования</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid"></div>
+  </div>
+
+  <main class="stage">
+    <header class="hero">
+      <div class="hero__tag">Конкурс английской песни</div>
+      <h1 class="hero__title">ЛИТ 1533</h1>
+      <div class="hero__subtitle">Онлайн‑оценивание жюри</div>
+    </header>
+
+    <section class="controls">
+      <button id="startBtn" class="btn btn--primary">Запустить подсчёт</button>
+      <button id="replayBtn" class="btn btn--ghost" disabled>Повторить</button>
+      <div id="statusText" class="status">Готово к показу</div>
+    </section>
+
+    <section class="results" aria-live="polite">
+      <div class="results__head">
+        <div class="results__title">🏆 Итоги голосования</div>
+        <div id="meta" class="results__meta"></div>
+      </div>
+
+      <div class="awards" id="awards"></div>
+
+      <div class="table">
+        <div class="table__head">
+          <div>#</div>
+          <div>Класс</div>
+          <div>Песня</div>
+          <div>Баллы</div>
+        </div>
+        <div class="table__body" id="tableBody"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="rollOverlay" class="roll">
+    <div class="roll__card">
+      <div class="roll__title">Барабанная дробь...</div>
+      <div class="roll__pulse"></div>
+      <div class="roll__bar"><div class="roll__bar-fill" id="rollFill"></div></div>
+      <div class="roll__hint">Подсчёт результатов</div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

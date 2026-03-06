@@ -1,0 +1,418 @@
+:root {
+  --bg-1: #0b0d1a;
+  --bg-2: #141b2d;
+  --accent: #ffcc4d;
+  --accent-2: #ff6b6b;
+  --accent-3: #3dd5f3;
+  --text: #f6f7fb;
+  --muted: rgba(246, 247, 251, 0.6);
+  --card: rgba(21, 24, 40, 0.75);
+  --glass: rgba(255, 255, 255, 0.08);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top, #1c223b 0%, var(--bg-1) 55%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at 30% 30%, black, transparent 70%);
+}
+
+.orb {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  filter: blur(20px);
+  opacity: 0.6;
+  animation: float 12s ease-in-out infinite;
+}
+
+.orb-1 {
+  background: radial-gradient(circle, rgba(255, 204, 77, 0.75), transparent 70%);
+  top: -80px;
+  left: -40px;
+}
+
+.orb-2 {
+  background: radial-gradient(circle, rgba(61, 213, 243, 0.6), transparent 70%);
+  right: -120px;
+  top: 120px;
+  animation-delay: 2s;
+}
+
+.orb-3 {
+  background: radial-gradient(circle, rgba(255, 107, 107, 0.6), transparent 70%);
+  bottom: -120px;
+  left: 30%;
+  animation-delay: 4s;
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px 120px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.hero__tag {
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.hero__title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(56px, 10vw, 132px);
+  margin: 8px 0;
+  letter-spacing: 6px;
+}
+
+.hero__subtitle {
+  font-size: clamp(16px, 2vw, 22px);
+  color: var(--muted);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.btn {
+  border: none;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn--primary {
+  background: linear-gradient(120deg, var(--accent), #ffe18d);
+  color: #1a1d2e;
+  box-shadow: 0 10px 30px rgba(255, 204, 77, 0.4);
+}
+
+.btn--ghost {
+  background: transparent;
+  border: 1px solid var(--glass);
+  color: var(--text);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.status {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.results {
+  background: var(--card);
+  border: 1px solid var(--glass);
+  border-radius: 32px;
+  padding: 32px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.results__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.results__title {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.results__meta {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.awards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.award-card,
+.parallel-card {
+  position: relative;
+  padding: 20px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 170px;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.6s ease;
+}
+
+.award-card.reveal,
+.parallel-card.reveal {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.award-card--grand {
+  background: linear-gradient(145deg, rgba(255, 204, 77, 0.18), rgba(255, 255, 255, 0.02));
+  border-color: rgba(255, 204, 77, 0.4);
+  box-shadow: 0 16px 40px rgba(255, 204, 77, 0.2);
+}
+
+.award-card__label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--muted);
+}
+
+.award-card__class {
+  font-size: 26px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.award-card__song {
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.award-card__score {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 52px;
+  margin-top: 12px;
+  letter-spacing: 2px;
+}
+
+.parallel-card__title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.parallel-card__slot {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.parallel-card__slot + .parallel-card__slot {
+  margin-top: 12px;
+}
+
+.parallel-card__medal {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  color: var(--muted);
+}
+
+.parallel-card__class {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.parallel-card__song {
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.parallel-card__score {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 36px;
+  margin-top: 8px;
+  letter-spacing: 1px;
+}
+
+.table {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 16px;
+}
+
+.table__head,
+.table__row {
+  display: grid;
+  grid-template-columns: 60px 100px 1fr 120px;
+  gap: 12px;
+  align-items: center;
+}
+
+.table__head {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.table__row {
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  transform: translateX(-20px);
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.table__row.reveal {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.table__score {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.roll {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 6, 12, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.roll.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.roll__card {
+  background: rgba(14, 16, 30, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 32px 40px;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.roll__title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 48px;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+}
+
+.roll__pulse {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 204, 77, 0.8), transparent 70%);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.roll__bar {
+  width: 320px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.roll__bar-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  transition: width 0.1s linear;
+}
+
+.roll__hint {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(20px);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .table__head,
+  .table__row {
+    grid-template-columns: 40px 80px 1fr 80px;
+  }
+
+  .results {
+    padding: 20px;
+  }
+
+  .roll__card {
+    width: 90%;
+  }
+}
