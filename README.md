@@ -34,7 +34,7 @@ python seed.py --force
 BOT_TOKEN=1234567890:AA...
 SUPERADMIN_TELEGRAM_ID=123456789
 DB_PATH=juri_bot.sqlite3
-WEB_ENABLED=1
+WEB_ENABLED=0
 WEB_HOST=0.0.0.0
 WEB_PORT=8080
 BOT_MODE=polling
@@ -101,8 +101,8 @@ python3 main.py
 ```
 7. Для остановки: `Ctrl + C`.
 
-После запуска доступны:
-- Telegram-бот
+После запуска всегда доступен Telegram-бот.
+Если включен `WEB_ENABLED=1`, дополнительно доступны:
 - веб-экран результатов: `http://<SERVER_IP>:8080/index.html`
 - веб-голосование жюри: `http://<SERVER_IP>:8080/vote.html`
 - веб-админка: `http://<SERVER_IP>:8080/admin.html`

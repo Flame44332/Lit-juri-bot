@@ -36,7 +36,7 @@ DB_PATH = os.getenv("DB_PATH", "juri_bot.sqlite3")
 
 SESSION_TTL_SECONDS = int(os.getenv("SESSION_TTL_SECONDS", "1800"))
 
-WEB_ENABLED = os.getenv("WEB_ENABLED", "1").lower() not in ("0", "false", "no")
+WEB_ENABLED = os.getenv("WEB_ENABLED", "0").lower() not in ("0", "false", "no")
 WEB_HOST = os.getenv("WEB_HOST", "0.0.0.0")
 WEB_PORT = int(os.getenv("WEB_PORT", "8080"))
 WEB_DIR = os.getenv("WEB_DIR", os.path.join(BASE_DIR, "web"))
